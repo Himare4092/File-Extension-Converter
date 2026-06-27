@@ -55,19 +55,7 @@ File Extension Converter
 更新の取得先リポジトリは `fec/updater.py` の `DEFAULT_REPO`（既定: `Himare4092/File-Extension-Converter`）。
 設定ファイルの `update_repo` で上書きできます。
 
-> **公開手順**: GitHub の `Himare4092/File-Extension-Converter` にリリース（タグ例 `v0.3.0`）を作成して
-> `FileExtensionConverter-Setup-x.y.z.exe` をアセットとして添付してください。アプリは
-> タグ名と現在のバージョンを比較し、新しければそのアセットを取得します。リリース未作成の間は
-> 「公開されているリリースが見つかりませんでした」と表示されます。
 
-## セットアップ
-
-```powershell
-cd "D:\My Apps Save\4\FileExtensionConverter"
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
 
 ### 外部エンジン（カテゴリにより別途インストール）
 
@@ -85,62 +73,19 @@ pip だけでは音声・動画・Office 文書などは変換できません。
 アプリは PATH と一般的なインストール先を自動検出します。エンジンが無い変換を実行すると、
 何を入れればよいかを日本語で表示します（クラッシュしません）。
 
-## 起動
 
-```powershell
-python run.py
-```
-
-## exe 化（配布用）
-
-専用の spec ファイル `FileExtensionConverter.spec` を用意済みです（エンジンが `importlib`
-で遅延インポートする PIL / yaml / xmltodict / toml / markdown / openpyxl などを hidden-import
-として明示し、インストール済みの任意ライブラリも自動で取り込みます）。
-
-```powershell
-pip install pyinstaller
-python -m PyInstaller --noconfirm --clean FileExtensionConverter.spec
-```
-
-- 出力: `dist\File Extension Converter\File Extension Converter.exe`（onedir 形式・約 330MB）
-- **配布時はフォルダ `dist\File Extension Converter\` を丸ごと**（zip 等で）渡してください。exe 単体では動きません。
-- 動作確認: `".\dist\File Extension Converter\File Extension Converter.exe" --selftest`
-  → `SELFTEST OK ...` と表示されればエンジンは正常です。
-
-単一 exe にしたい場合は spec の `COLLECT(...)` を削除し `EXE(...)` を onefile 構成
-（`exclude_binaries=False` + `a.binaries, a.datas` を EXE に渡す）に変更します。
-起動は遅くなりますが 1 ファイルになります。
 
 > ※ FFmpeg / LibreOffice / Ghostscript / Calibre などの外部エンジンは exe に同梱されません。
 > これらが必要な変換（音声・動画・Office 文書など）は、利用環境に別途インストールが必要です
 > （未導入時はアプリが必要なものを日本語で案内します）。
 
-## インストーラー作成（セットアップ exe）
 
-[Inno Setup](https://jrsoftware.org/isdl.php) 用のスクリプト `installer.iss` を用意済みです。
-PyInstaller の onedir 出力（`dist\File Extension Converter\`）を 1 つのセットアップ exe にまとめます。
-
-```powershell
-# 1) 先に exe をビルド
-python -m PyInstaller --noconfirm --clean FileExtensionConverter.spec
-# 2) Inno Setup を導入（未インストールの場合）
-winget install --id JRSoftware.InnoSetup -e
-# 3) インストーラーをコンパイル
-& "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" installer.iss
-```
 
 - 出力: `installer_output\FileExtensionConverter-Setup-0.1.0.exe`（約 92MB・単一ファイル）
 - **ユーザー単位インストール**（管理者権限・UAC 不要）。インストール先は `%LOCALAPPDATA%\Programs\File Extension Converter`
 - スタートメニュー・（任意で）デスクトップにショートカットを作成、アンインストーラー同梱
 - 日本語／英語のウィザード対応
 
-### サイレントインストール / アンインストール
-```powershell
-# 無人インストール
-.\installer_output\FileExtensionConverter-Setup-0.1.0.exe /VERYSILENT /NORESTART
-# アンインストール
-& "$env:LOCALAPPDATA\Programs\File Extension Converter\unins000.exe" /VERYSILENT
-```
 
 > バージョンを上げるときは `installer.iss` の `MyAppVersion` を更新してください。
 
