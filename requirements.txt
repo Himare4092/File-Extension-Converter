@@ -1,0 +1,30 @@
+# ---- GUI ----
+PySide6>=6.6
+
+# ---- core (always useful) ----
+Pillow>=10.0          # 画像: JPEG/PNG/WebP/BMP/GIF/TIFF/ICO/TGA/PPM/PGM/PBM/PSD ...
+openpyxl>=3.1         # XLSX <-> CSV/TSV
+PyYAML>=6.0           # データ: YAML
+xmltodict>=0.13       # データ: XML
+toml>=0.10            # データ: TOML 書き出し (読み込みは tomllib も使用)
+markdown>=3.5         # MD -> HTML
+
+# ---- optional (各カテゴリを完全対応させる場合) ----
+pillow-heif>=0.13     # 画像: HEIC 読み込み
+rawpy>=0.18           # 画像: RAW (CR2/NEF/ARW...) 読み込み
+cairosvg>=2.7         # 画像: SVG -> PNG/PDF/EPS
+imageio>=2.31         # 画像: EXR/HDR
+PyMuPDF>=1.23         # 文書: PDF/PPTX -> 画像
+fonttools>=4.44       # フォント: TTF/OTF/WOFF/WOFF2
+brotli>=1.1           # フォント: WOFF2 圧縮
+trimesh>=4.0          # 3D: OBJ/STL/PLY/GLTF/GLB/DAE
+py7zr>=0.20           # アーカイブ: 7Z
+rarfile>=4.1          # アーカイブ: RAR 解凍 (要 unrar)
+
+# ---- 外部エンジン (pip ではなく別途インストールが必要) ----
+#   FFmpeg        : 音声・動画 すべて   https://www.gyan.dev/ffmpeg/builds/  (または winget install ffmpeg)
+#   LibreOffice   : DOCX/XLSX/PPTX/PDF など  https://www.libreoffice.org/
+#   Ghostscript   : EPS/AI のラスタライズ    https://ghostscript.com/
+#   Calibre       : EPUB/MOBI/AZW3 (ebook-convert)  https://calibre-ebook.com/
+#   Inkscape      : AI/SVG ベクター変換 (任意)
+#   Assimp        : FBX/3DS (3D)

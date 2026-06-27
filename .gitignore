@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# PyInstaller build artifacts
+build/
+dist/
+*.manifest
+
+# Inno Setup output (installers are attached to GitHub Releases, not committed)
+installer_output/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
