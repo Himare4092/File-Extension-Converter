@@ -51,8 +51,10 @@ def is_newer(remote_tag: str, local: str = __version__) -> bool:
 def check(repo: str) -> tuple[str, str | None, str | None]:
     """Return (latest_tag, installer_exe_url, release_html_url).
 
+    Uses the releases *list* endpoint (not /releases/latest) so that
+    pre-releases are considered too, then picks the highest version tag.
     Raises UpdateError with a localized message on failure."""
-    url = f"https://api.github.com/repos/{repo}/releases/latest"
+    url = f"https://api.github.com/repos/{repo}/releases?per_page=30"
     req = urllib.request.Request(
         url, headers={**_UA, "Accept": "application/vnd.github+json"})
     try:
@@ -67,13 +69,18 @@ def check(repo: str) -> tuple[str, str | None, str | None]:
     except Exception as e:  # noqa
         raise UpdateError(f"アップデート確認に失敗しました: {e}") from e
 
-    tag = data.get("tag_name") or data.get("name") or ""
+    releases = [r for r in data if isinstance(r, dict) and not r.get("draft")]
+    if not releases:
+        raise UpdateError("公開されているリリースが見つかりませんでした。")
+
+    best = max(releases, key=lambda r: _parse_version(r.get("tag_name") or ""))
+    tag = best.get("tag_name") or best.get("name") or ""
     asset_url = None
-    for a in data.get("assets", []):
+    for a in best.get("assets", []):
         if a.get("name", "").lower().endswith(".exe"):
             asset_url = a.get("browser_download_url")
             break
-    return tag, asset_url, data.get("html_url")
+    return tag, asset_url, best.get("html_url")
 
 
 def download(url: str, dest_dir: str | None = None) -> str:
